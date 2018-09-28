@@ -38,18 +38,29 @@ var myContractInstance = MyContract.at('0x34f0d846c766874413938994da32360Cf0E435
 //
 // console.info('address balance: ' + web3.fromWei(balance, 'ether'));
 
-function scheduleCronstyle(){
-    schedule.scheduleJob('0 */5 * * * ?', function(){
-        console.info(new Date() + ' -- address locked: ' +locked);
-        var locked = myContractInstance.frozenAccount('0x79E3FaA828793b8d96E947f59DFA4b767e12B5Ed');
-        if(!locked){
-            sms.sendSms('18321972003','1200');
+var locked = true;
+
+function scheduleCronstyle() {
+
+    //job任务
+    var j = schedule.scheduleJob('0 */3 * * * ?', function () {
+        locked = myContractInstance.frozenAccount('0x79E3FaA828793b8d96E947f59DFA4b767e12B5Ed');
+        console.info(new Date() + ' -- locked: ' + locked);
+        if (!locked) {
+            sms.sendSms('18321972003', '1200');
         }
     });
+
+    setInterval(function () {
+        console.info(new Date() + ' -- 检查 -- locked: ' + locked);
+        if (!locked) {
+            console.log(new Date() + ' -- locked: ' + locked + '定时器取消');
+            j.cancel();
+        }
+    },  1*60*1000); //每一分钟检查一下，进行取消操作
 }
 
 scheduleCronstyle();
-
 
 
 //myContractInstance.freezeAccount('0x79E3FaA828793b8d96E947f59DFA4b767e12B5Ed', false);

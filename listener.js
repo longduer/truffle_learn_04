@@ -45,14 +45,14 @@ function scheduleCronstyle() {
     //job任务
     var j = schedule.scheduleJob('0 */3 * * * ?', function () {
         locked = myContractInstance.frozenAccount('0x79E3FaA828793b8d96E947f59DFA4b767e12B5Ed');
-        console.info(new Date() + ' -- locked: ' + locked);
+        console.info(new Date() + ' sait 合约 -- locked: ' + locked);
         if (!locked) {
             sms.sendSms('18321972003', '1200');
         }
     });
 
     setInterval(function () {
-        console.info(new Date() + ' -- 检查 -- locked: ' + locked);
+        console.info(new Date() + ' -- setInterval 取消定时检查 -- locked: ' + locked);
         if (!locked) {
             console.log(new Date() + ' -- locked: ' + locked + '定时器取消');
             j.cancel();
